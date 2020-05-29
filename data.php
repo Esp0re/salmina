@@ -14,10 +14,10 @@ if(!isset($_SESSION['logged_in']))  {
 
 ///// Connection to Database
 
-$servername = "localhost";
-$username = "root";
-$passworddb = "";
-$dbname = "salmina";
+$servername = getenv("DB_HOST") ?: "localhost";
+$username = getenv("DB_USER") ?: "root";
+$passworddb = getenv("DB_PASS") ?: "";
+$dbname = getenv("DB_NAME") ?: "salmina";
 
 // Create connection
 $conn = new mysqli($servername, $username, $passworddb, $dbname);

@@ -1,5 +1,11 @@
 <?php 
 
+require __DIR__ . "/vendor/autoload.php";
+
+$dotenv = Dotenv\Dotenv::createMutable(__DIR__);
+$dotenv->safeLoad();
+
+
 function submitsaledata($posted,$conn){
     $ids =[];
     $ids = explode('_',array_keys($posted)[0]); //first [1] id is product, second is person
@@ -117,10 +123,10 @@ class Product
 
    ///// Connection to Database
 
-   $servername = "localhost";
-   $username = "root";
-   $passworddb = "";
-   $dbname = "salmina";
+   $servername = getenv("DB_HOST") ?: "localhost";
+   $username = getenv("DB_USER") ?: "root";
+   $passworddb = getenv("DB_PASS") ?: "";
+   $dbname = getenv("DB_NAME") ?: "salmina";
 
    // Create connection
    $conn = new mysqli($servername, $username, $passworddb, $dbname);
