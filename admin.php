@@ -32,11 +32,12 @@
             $alc = round(1000/($weight*1000*(0+0.68*$sex+0.55*(1-$sex))),4);
 
             $sql = "UPDATE users 
-                    SET weight=".$weight." 
-                        ,alcohol_coef=".$alc."
+                    SET weight=".$weight.", alcohol_coef=".$alc.",sex_male=".$sex."
                     WHERE full_name='".$name."'";
      
-            $conn->query($sql);
+            if(($conn->query($sql))==false){
+                echo "PROBLEMEME";
+            };
         }
         elseif($_GET["action"] == "deletesale"){
             $id = (int)$_POST["idsaletodelete"];
