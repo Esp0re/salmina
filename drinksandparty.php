@@ -7,8 +7,8 @@
 
 
     $pagemode = new stdClass;
-    $pagemode->happycolors = ["happycolors","party","styles\happycolors.css","versions\happycolors.php", "styles\happycolors_sales.css"];  //// first one is link to the version, second is name of version, then css, then php 
-    $pagemode->officiallyclean =["officiallyclean","officiallyclean","styles\clean.css","versions\clean.php","styles\clean.css"]; 
+    $pagemode->happycolors = ["happycolors","party","styles/happycolors.css","versions/happycolors.php", "styles/happycolors_sales.css"];  //// first one is link to the version, second is name of version, then css, then php 
+    $pagemode->officiallyclean =["officiallyclean","officiallyclean","styles/clean.css","versions/clean.php","styles/clean.css"]; 
     
     $actualv = new stdClass;  
 
