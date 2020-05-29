@@ -31,8 +31,8 @@
         <form method="post" action="drinksandparty.php">
             
                 <?php           
-                    $products[0]->_name = "Jus de pomme";
-                    $products[1]->_name = "l'eau contre la toux";  
+                    $products[0]->_name = "Houblon";
+                    $products[1]->_name = "Eau";  
                     foreach ($persons as $person){
                         echo '<div class="person">';
                             echo '<span class="nametitle">'.$person->_name.'</span>';

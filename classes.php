@@ -33,7 +33,7 @@ function calculalcohol($conn,$id){ /// calculates and returns actual alcohol in 
 
         $init = new stdClass;
 
-        $init->blood = 0;
+        $init->blood = 0.00;
         $init->time = strtotime($result->fetch_assoc()["dtime"]);
 
         $result->data_seek(0);

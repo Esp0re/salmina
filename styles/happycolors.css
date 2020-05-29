@@ -7,7 +7,9 @@ body {
     display: inline-block ;
     width: 40px;
 }
-
+table{
+    width: 100%;
+}
 input {
 
     background: rgb(212, 51, 204);
