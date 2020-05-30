@@ -1,5 +1,5 @@
 # salmina
-salmina drinks
+[![deploy](https://github.com/Esp0re/salmina/workflows/deploy/badge.svg)](https://salmina.loriswit.com/)
 
 to add a new version: 
 1) create new pagemode variable in drinksandparty.php (only existing php file u need to bidouiller)
