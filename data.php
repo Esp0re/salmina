@@ -40,12 +40,13 @@ include("classes.php");
 //// Get Persons from Database
 $persons = array(); //list of persons
 
-$sql = "SELECT id,full_name as fname,alcohol_coef as coef
-       FROM users";
+$sql = "SELECT id, full_name as fname,
+        weight, sex_male, alcohol_coef as coef
+        FROM users";
 $result = $conn->query($sql);
 
 while ($row = $result->fetch_assoc()) {
-    $persons[] = new Person($row['id'], $row['fname'], $row['coef'], $conn); //fill list of persons
+    $persons[] = new Person($row['id'], $row['fname'], $row['weight'], $row['sex_male'], $row['coef'], $conn); //fill list of persons
 }
 
 usort($persons, function ($first, $second) { //sort list of persons by alcohol in blood
@@ -55,7 +56,7 @@ usort($persons, function ($first, $second) { //sort list of persons by alcohol i
 
 //Get Drinks/products List from Database
 
-$sql = "SELECT id,product_name as name FROM products";
+$sql = "SELECT id, product_name as name FROM products";
 $result = $conn->query($sql);
 $products = [];
 

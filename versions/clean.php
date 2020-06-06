@@ -12,7 +12,7 @@
     <body>
         
         <h1 id="title1">
-        
+        <a href="index.php?action=logout">logout</a>
         <?php 
         echo $sante;
         if($sante != true){

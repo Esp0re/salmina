@@ -6,7 +6,7 @@ session_start();
  * Comportement actuel chiant parce que si on est connecté, il faut aller en nav privée 
  * et se connecter avec le bon mdp pour accéder à l'admin
  * -> problème réglé
- * */ 
+ * */
 // Not admin
 if (!isset($_SESSION['admin'])) {
     header("Location: index.php?action=logout");
@@ -15,8 +15,9 @@ if (!isset($_SESSION['admin'])) {
 include("data.php");
 
 if ($_GET) {
-    if ($_GET["action"] == "newuser") //// insert new user
-    {
+
+    //// insert new user
+    if ($_GET["action"] == "newuser") {
         $name = $_POST["name"];
         $weight = $_POST["weight"];
         $sex = (int) isset($_POST["male"]);
@@ -27,12 +28,14 @@ if ($_GET) {
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("siid", $name, $weight, $sex, $alc);
         $stmt->execute();
-    } elseif ($_GET["action"] == "updateuser") { //update user weight / sex /alcohol_coef
-        $name = $_POST["updatename"];
+    } 
+
+    //update user weight / sex /alcohol_coef
+    elseif ($_GET["action"] == "updateuser") { 
+        $name = htmlspecialchars($_POST["updatename"]);
         $weight = (int) $_POST["weightupdate"];
-        $sex = (int) $_POST["sexupdate"];
-
-
+        $sex = !isset($_POST["sexupdate"]) ? 0 : (int) $_POST["sexupdate"] ;
+        
         $alc = round(1000 / ($weight * 1000 * (0 + 0.68 * $sex + 0.55 * (1 - $sex))), 4);
 
         $sql = "UPDATE users 
@@ -42,22 +45,31 @@ if ($_GET) {
         if (($conn->query($sql)) == false) {
             echo "PROBLEMEME";
         };
-    } elseif ($_GET["action"] == "deletesale") {
-        $id = (int) $_POST["idsaletodelete"];
-        $sql = "DELETE FROM sales WHERE id=" . $id . "";
+    } 
+    
+    // Delete sale
+    elseif ($_GET["action"] == "deletesale") {
+        $id = (int) $_GET["id"];
+        $sql = "UPDATE sales SET deleted = 1 WHERE id=" . $id . "";
+
+        $conn->query($sql);
+    }
+    // Undelete sale
+    elseif ($_GET["action"] == "undeletesale") {
+        $id = (int) $_GET["id"];
+        $sql = "UPDATE sales SET deleted = 0 WHERE id=" . $id . "";
 
         $conn->query($sql);
     }
 }
 
-$sql = "SELECT sales.id as id, users.full_name as name, sales.sale_datetime as time, products.product_name as product
+$sql = "SELECT sales.id as id, users.full_name as name, sales.deleted as del, sales.sale_datetime as time, products.product_name as product
             FROM sales JOIN users ON users.id = sales.buyer_id 
             JOIN products ON products.id = sales.product_id
             ORDER BY time DESC
             LIMIT 50";
 
 $drinks = $conn->query($sql);
-
 ?>
 
 <html>
@@ -77,7 +89,7 @@ $drinks = $conn->query($sql);
             <a href="index.php?action=logout">Logout</a>
         </li>
     </nav>
-    
+
     <form method="post" action="admin.php?action=newuser">
         New person: <br />
         <label> Name </label>
@@ -85,7 +97,7 @@ $drinks = $conn->query($sql);
         <label> Weight </label>
         <input type="number" name="weight" required> <br />
         <label> Male? </label>
-        <input type="checkbox" name="male" value="1" required> <br />
+        <input type="checkbox" name="male" value="1"> <br />
         <input type="submit" value="Insert">
     </form>
 
@@ -100,26 +112,32 @@ $drinks = $conn->query($sql);
             ?>
         </select>
         <br />
-        <label> weight: </label>
-        <input type="number" name="weightupdate" required> <br />
-        <label> male? 1 = yes </label>
-        <input type="number" name="sexupdate" required> <br />
+        <label> Weight: </label>
+        <input type="number" name="weightupdate" required> <br>
+        <label> Male?</label>
+        <input type="checkbox" name="sexupdate" value="1"> <br>
         <input type="submit" value="update">
     </form>
-
+    <!--
     <form method="post" action="admin.php?action=deletesale">
         <label> id of sale to delete </label>
         <input type="number" name="idsaletodelete" required> <br />
         <input type="submit" value="delete">
-    </form>
+    </form> 
+        -->
+    <br>
 
     <table>
+        <th>id</th> <th>Nom</th> <th>Boisson</th> <th>Heure</th> <th>Date</th> <th>Supprimer</th>
         <?php
         while ($row = $drinks->fetch_assoc()) {
             $time = date("H:i", strtotime($row["time"]));
             $date = date("d.m", strtotime($row["time"]));
-            echo '<tr>';
-            echo '<th>' . $row["id"] . '</th>' . '<th>' . $row["name"] . '<th>' . $row["product"] . '</th>' . '</th>' . '<th>' . $time . '</th>' . '<th>' . $date . '</th>';
+            $css_class = $row["del"] == 1 ? 'deleted' : '';
+
+            echo '<tr class="' . $css_class . '">';
+            echo '<td>' . $row["id"] . '</td>' . '<td>' . $row["name"] . '<td>' . $row["product"] . '</td>' . '</td>' . '<td>' . $time . '</td>' . '<td>' . $date . '</td>';
+            echo '<td class="action_delete"><a class="delete" title="delete sale" href="admin.php?action=deletesale&id='. $row["id"] .'">❌</a>  <a class="undo" title="undelete sale" href="admin.php?action=undeletesale&id='. $row["id"] .'">✔</a></td>';
             echo '</tr>';
         }
         ?>

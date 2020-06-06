@@ -6,11 +6,11 @@ $dotenv = Dotenv\Dotenv::createMutable(__DIR__);
 $dotenv->safeLoad();
 
 
-function submitsaledata($posted,$conn){
+function submitsaledata($posted, $conn){
     $ids =[];
     $ids = explode('_',array_keys($posted)[0]); //first [1] id is product, second is person
         
-    $sql = "INSERT INTO sales (buyer_id, product_id, sale_datetime, product_price, amount, total_price, alcoholblood_permil)
+    $sql = "INSERT INTO sales (buyer_id, product_id, sale_datetime, product_price, amount, total_price, alcoholblood_permil, deleted)
                 VALUES (?,?,NOW(),(
                     SELECT current_price
                     FROM products
@@ -19,7 +19,7 @@ function submitsaledata($posted,$conn){
                     SELECT current_price
                     FROM products
                     WHERE products.id = ?),
-                    0
+                    0, 0
                 )"; 
 
     $stmt = $conn->prepare($sql);
@@ -32,7 +32,9 @@ function calculalcohol($conn,$id){ /// calculates and returns actual alcohol in 
         $sql = "SELECT users.id as id, sales.sale_datetime as dtime, products.alcohol_grams as gram, users.alcohol_coef as coef
                 FROM sales JOIN users on sales.buyer_id = users.id 
                 JOIN products ON sales.product_id = products.id 
-                WHERE sale_datetime >= NOW() - INTERVAL 1 DAY AND users.id =".$id."
+                WHERE sale_datetime >= NOW() - INTERVAL 1 DAY 
+                AND sales.deleted = 0
+                AND users.id =".$id." 
                 ORDER BY dtime ASC";
         
         $result = $conn->query($sql);
@@ -68,7 +70,9 @@ function getdrinks($conn,$id){ // returns array of quantity of drinks in last 24
     
     $sql = "SELECT buyer_id, product_id, COUNT(*) as amount
             FROM sales
-            WHERE sale_datetime >= NOW() - INTERVAL 1 DAY AND buyer_id=".$id."
+            WHERE sale_datetime >= NOW() - INTERVAL 1 DAY 
+            AND deleted = 0
+            AND buyer_id=".$id."
             GROUP BY product_id
             ORDER BY product_id";
 
@@ -86,24 +90,35 @@ class Person
     // property declaration
     public $_id;
     public $_name;
+    public $_weight;
+    public $_sex_male;
     public $_drinks;
     public $_bloodalc;
     private $_coef;
 
 
-    function __construct( $id,$name, $coef, $conn) {
+    function __construct($id, $name, $weight, $sex_male, $coef, $conn) {
         $this->_id = $id;
         $this->_name = $name;
+        $this->_weight = (int) $weight;
+        $this->_sex_male = $sex_male;
         $this->_coef = $coef;
 
         $this->_bloodalc = calculalcohol($conn,$this->_id); // get the permill of alcohol from the calculator
 
         $this->_drinks = getdrinks($conn,$this->_id);
-        
     }
 
     function setdrinks($drinks){
         $this->_drinks = $drinks;
+    }
+
+    function  getWeight(){
+        return $this->_weight;
+    }
+
+    function  getSexMale(){
+        return $this->_sex_male;
     }
 }
 

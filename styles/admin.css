@@ -28,6 +28,25 @@ input,select{
 table{
     width: 100%;
     max-width: 30em;
+    margin-left: 2em;
+}
+th, td {
+    text-align: center;
+}
+tr.deleted {
+    text-decoration: line-through;
+}
+td.action_delete {
+    font-weight: bold;
+}
+td.action_delete a {
+    text-decoration: none ;
+}
+td.action_delete a.delete {
+    color: red;
+}
+td.action_delete a.undo {
+    color: green;
 }
 
 nav {
@@ -36,4 +55,4 @@ nav {
 nav li {
     margin:0 2em;
     list-style-type: none;
-}
+} 
