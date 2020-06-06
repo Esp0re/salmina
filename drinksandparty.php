@@ -30,7 +30,7 @@
         $actualv->css_sales = $pagemode->happycolors[4];
     }
 
-    //// Manage if somone press a button
+    //// Manage if someone press a button
     $ids;
     if ($_POST){
 
@@ -51,9 +51,3 @@
 
 
 include($actualv->html);
-
-?>
-
-
-
-

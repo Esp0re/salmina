@@ -71,6 +71,9 @@ $drinks = $conn->query($sql);
 </head>
 
 <body>
+    <p>
+        <a href="index.php?action=logout">Logout</a>
+    </p>
     <form method="post" action="admin.php?action=newuser">
         New person: <br />
         <label> Name </label>
