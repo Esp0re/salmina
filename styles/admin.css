@@ -29,3 +29,11 @@ table{
     width: 100%;
     max-width: 30em;
 }
+
+nav {
+    display: flex;
+}
+nav li {
+    margin:0 2em;
+    list-style-type: none;
+}

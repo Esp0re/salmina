@@ -9,8 +9,7 @@ session_start();
  * */ 
 // Not admin
 if (!isset($_SESSION['admin'])) {
-    session_destroy();
-    header("Location: index.php");
+    header("Location: index.php?action=logout");
 }
 
 include("data.php");
@@ -67,13 +66,18 @@ $drinks = $conn->query($sql);
     <title>admin</title>
     <link rel="stylesheet" href="styles/admin.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 </head>
 
 <body>
-    <p>
-        <a href="index.php?action=logout">Logout</a>
-    </p>
+    <nav>
+        <li>
+            <a href="drinksandparty.php">Drinks</a>
+        </li>
+        <li>
+            <a href="index.php?action=logout">Logout</a>
+        </li>
+    </nav>
+    
     <form method="post" action="admin.php?action=newuser">
         New person: <br />
         <label> Name </label>
