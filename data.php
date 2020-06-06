@@ -7,9 +7,9 @@ date_default_timezone_set('Europe/Zurich');
 ////// Check login 
 $logged = "true";
 
-if(!isset($_SESSION['logged_in']))  {
+if (!isset($_SESSION['logged_in'])) {
     header("Location: index.php");
-} 
+}
 
 
 ///// Connection to Database
@@ -31,8 +31,8 @@ if (!$conn->set_charset("utf8")) {
 
 
 // global variables 
-    $amountofdrinks = 2;
-    
+$amountofdrinks = 2;
+
 //include Classes
 include("classes.php");
 
@@ -44,11 +44,11 @@ $sql = "SELECT id,full_name as fname,alcohol_coef as coef
        FROM users";
 $result = $conn->query($sql);
 
- while ($row = $result->fetch_assoc()) {
-    $persons[] = new Person($row['id'],$row['fname'],$row['coef'],$conn); //fill list of persons
-} 
+while ($row = $result->fetch_assoc()) {
+    $persons[] = new Person($row['id'], $row['fname'], $row['coef'], $conn); //fill list of persons
+}
 
-usort($persons,function($first,$second){ //sort list of persons by alcohol in blood
+usort($persons, function ($first, $second) { //sort list of persons by alcohol in blood
     return $first->_bloodalc < $second->_bloodalc;
 });
 
@@ -59,10 +59,6 @@ $sql = "SELECT id,product_name as name FROM products";
 $result = $conn->query($sql);
 $products = [];
 
-while($row = $result->fetch_assoc()) {    
-    $products[] = new Product($row['id'],$row['name']);
+while ($row = $result->fetch_assoc()) {
+    $products[] = new Product($row['id'], $row['name']);
 }
-
-
-
-?>
