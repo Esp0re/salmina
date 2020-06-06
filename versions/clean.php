@@ -12,7 +12,6 @@
     <body>
         
         <h1 id="title1">
-        <a href="index.php?action=logout">logout</a>
         <?php 
         echo $sante;
         if($sante != true){
@@ -28,6 +27,8 @@
 
         <a href="drinksandparty.php?v=happycolors">click here to party</a>
         
+        <a href="index.php?action=logout">logout</a>
+        <a href="admin.php">admin</a>
         <form method="post" action="drinksandparty.php">
             
                 <?php           

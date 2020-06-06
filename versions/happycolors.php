@@ -21,6 +21,8 @@
         ?>
     </h1>
     <a href="index.php?action=logout">logout</a>
+    <a href="admin.php">admin</a>
+    
     <form method="post" action="drinksandparty.php">
         <table style="width:100%">
             <?php

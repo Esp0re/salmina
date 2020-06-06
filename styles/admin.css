@@ -56,3 +56,9 @@ nav li {
     margin:0 2em;
     list-style-type: none;
 } 
+
+@media only screen and (max-width: 600px) {
+    table {
+        margin-left: 0;
+    }
+  }
