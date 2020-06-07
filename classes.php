@@ -184,4 +184,3 @@ print_r(
    );
 
 echo "<br/>".$persons[1]->_bloodalc; */
-?>
