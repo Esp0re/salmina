@@ -61,7 +61,7 @@ if (isset($_POST['password'])) {
 </head>
 
 <body>
-    <form method="post" action="index.php">
+    <form method="post" action="login.php">
         Login: <br />
         <input type="password" name="password" placeholder="Mot de passe"> <br>
         <label for="remember">Se souvenir de moi</label>

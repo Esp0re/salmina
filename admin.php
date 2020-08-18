@@ -9,7 +9,7 @@ session_start();
  * */
 // Not admin
 if (!isset($_SESSION['admin'])) {
-    header("Location: index.php?action=logout");
+    header("Location: login.php?action=logout");
 }
 
 include("data.php");
@@ -87,7 +87,7 @@ $drinks = $conn->query($sql);
             <a href="drinksandparty.php">Drinks</a>
         </li>
         <li>
-            <a href="index.php?action=logout">Logout</a>
+            <a href="login.php?action=logout">Logout</a>
         </li>
     </nav>
 

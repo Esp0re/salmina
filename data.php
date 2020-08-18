@@ -8,7 +8,7 @@ date_default_timezone_set('Europe/Zurich');
 $logged = "true";
 
 if (!isset($_SESSION['logged_in'])) {
-    header("Location: index.php");
+    header("Location: login.php");
 }
 
 

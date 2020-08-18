@@ -26,7 +26,7 @@
 
         <a href="drinksandparty.php?v=happycolors">click here to party</a>
         
-        <a href="index.php?action=logout">logout</a>
+        <a href="login.php?action=logout">logout</a>
         <a href="admin.php">admin</a>
         <form method="post" action="drinksandparty.php">
             
