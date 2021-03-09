@@ -24,6 +24,8 @@ input,select{
     text-align: center;
     clear: both;
     width: 30%;
+    overflow-y: auto;
+
 }
 table{
     width: 100%;

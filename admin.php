@@ -61,6 +61,76 @@ if ($_GET) {
 
         $conn->query($sql);
     }
+
+    // Create CSV 
+    elseif ($_GET["action"] == "prepare_download"){
+
+        $details = ($_POST["datatype"]=="details");
+
+        $sql_t = 'SELECT
+        full_name AS Buyer_Name,
+        SUM(
+            CASE WHEN product_id = 1 THEN 1 ELSE 0
+        END
+        ) AS "Biere",
+        SUM(
+            CASE WHEN product_id = 2 THEN 1 ELSE 0
+        END
+        ) AS "Pastis",
+        COUNT(sales.id) AS Total,
+        SUM(sales.total_price) AS Total_Price
+        FROM
+            sales
+        JOIN users ON sales.buyer_id = users.id
+        JOIN products ON sales.product_id = products.id
+        WHERE
+            deleted = 0
+        GROUP BY
+            buyer_id
+        ORDER BY
+            Total
+        DESC
+            ';
+
+        $sql_d = 'SELECT
+                IF(
+                    HOUR(sale_datetime) < 12,
+                    DATE_SUB(
+                        DATE(sale_datetime),
+                        INTERVAL 1 DAY
+                    ),
+                    DATE(sale_datetime)
+                ) AS Party_Date,
+                full_name as Buyer_Name,
+                SUM(CASE WHEN product_id = 1 THEN 1 ELSE 0 END) as "Biere" ,
+                SUM(CASE WHEN product_id = 2 THEN 1 ELSE 0 END) as "Pastis",
+                Count(sales.id) as Total,
+                SUM(sales.total_price) as Total_Price
+            
+            
+            FROM
+                sales
+            JOIN users ON sales.buyer_id = users.id
+            JOIN products ON sales.product_id = products.id
+            WHERE deleted = 0 
+            GROUP BY
+                Party_date,buyer_id
+            ORDER BY Party_Date DESC';
+
+
+        $sql = ($details ? $sql_d : $sql_t);
+        $results = $conn->query($sql);
+        $fp = fopen('data/data.csv', 'w');
+
+        while ($row = $results->fetch_assoc()){
+            fputcsv($fp, $row);
+        }
+        fclose($fp);
+        header("Location: data/data.csv");
+
+    }
+
+
 }
 
 $sql = "SELECT sales.id as id, users.full_name as name, sales.deleted as del, sales.sale_datetime as time, products.product_name as product
@@ -119,13 +189,17 @@ $drinks = $conn->query($sql);
         <input type="checkbox" name="sexupdate" value="1"> <br>
         <input type="submit" value="update">
     </form>
-    <!--
-    <form method="post" action="admin.php?action=deletesale">
-        <label> id of sale to delete </label>
-        <input type="number" name="idsaletodelete" required> <br />
-        <input type="submit" value="delete">
-    </form> 
-        -->
+    
+    <form method="post" action="admin.php?action=prepare_download">
+    <label> Data per person </label>
+        <select id="datatype" name="datatype" size="2" multiple>
+        <option value="totals">Totals </option>
+        <option value="details" selected="selected">+ Date</option>
+        </select>
+        <label> Export CSV </label>
+        <input type="submit" value="Download">
+    </form>
+
     <br>
 
     <table>
