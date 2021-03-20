@@ -1,5 +1,8 @@
-.DS_Store
+# Dependencies
 vendor
+
+# Drinks tables
+data/
 
 # Local env file
 .env
@@ -7,3 +10,5 @@ vendor
 # Editor directories and files
 .idea
 .vscode
+
+.DS_Store

@@ -120,6 +120,10 @@ if ($_GET) {
 
         $sql = ($details ? $sql_d : $sql_t);
         $results = $conn->query($sql);
+
+        if (!file_exists('data'))
+            mkdir('data');
+
         $fp = fopen('data/data.csv', 'w');
 
         while ($row = $results->fetch_assoc()){
