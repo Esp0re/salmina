@@ -6,11 +6,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Install dependencies
-        run: |
-          composer validate --no-check-publish
-          composer install --prefer-dist --no-progress --no-suggest
-
       - name: Transfer files
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:

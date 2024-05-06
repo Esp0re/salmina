@@ -1,11 +1,5 @@
 <?php 
 
-require __DIR__ . "/vendor/autoload.php";
-
-$dotenv = Dotenv\Dotenv::createMutable(__DIR__);
-$dotenv->safeLoad();
-
-
 function submitsaledata($posted, $conn){
     $ids =[];
     $ids = explode('_',array_keys($posted)[0]); //first [1] id is product, second is person
