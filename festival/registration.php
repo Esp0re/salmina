@@ -17,6 +17,7 @@ if ($registration["ticket1"] && $registration["ticket2"]) $items[] = ["name" => 
 $total = array_sum(array_map(fn($item) => $item["price"], $items));
 
 $hasPaid = $registration["has_paid"];
+$twintCode = "salmina" . explode("-", $festival["start_date"])[0] . " " . $registration["hash"]
 ?>
 
 <p>Tu es inscrit au festival!</p>
@@ -58,7 +59,7 @@ $hasPaid = $registration["has_paid"];
         </tr>
         <tr>
             <th>Message</th>
-            <td>salmina2024 <?= $registration["hash"] ?></td>
+            <td><?= $twintCode ?></td>
         </tr>
     </table>
 <?php endif ?>
