@@ -16,7 +16,7 @@
         <p>Repas</p>
 
         <div class="meals">
-            <label class="field" v-for="(meal, index) in meals">
+            <label class="field" v-for="(meal, index) in possibleMeals()">
                 <input type="checkbox" :name="`meal${index+1}`" v-model="meal.checked">
                 <span class="name">{{ meal.name }}</span>
                 <span class="price">+ CHF {{ meal.price }}</span>
@@ -63,10 +63,10 @@
             { name: "Samedi 20 juillet", price: ticketPrice, checked: false },
         ],
         meals: [
-            { name: "19 juillet – soir", price: mealPrice, checked: false },
-            { name: "20 juillet – midi", price: mealPrice, checked: false },
-            { name: "20 juillet – soir", price: mealPrice, checked: false },
-            { name: "21 juillet – midi", price: mealPrice, checked: false },
+            { name: "19 juillet – soir", price: mealPrice, checked: false, tickets: [0] },
+            { name: "20 juillet – midi", price: mealPrice, checked: false, tickets: [0, 1] },
+            { name: "20 juillet – soir", price: mealPrice, checked: false, tickets: [1] },
+            { name: "21 juillet – midi", price: mealPrice, checked: false, tickets: [1] },
         ],
         ticketDiscount,
         conditionsRead: false,
@@ -80,6 +80,9 @@
         hasDiscount(ticket) {
             return !ticket.checked && this.hasSomeTicket() ||
                 this.hasAllTickets() && this.tickets.indexOf(ticket) > 0
+        },
+        possibleMeals() {
+            return this.meals.filter(meal => meal.tickets.some(index => this.tickets[index].checked))
         },
         totalPrice() {
             return [...this.tickets, ...this.meals]
