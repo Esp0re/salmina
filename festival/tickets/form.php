@@ -1,4 +1,4 @@
-<form method="post" action="/festival/register.php" id="form" v-scope v-cloak>
+<form method="post" action="/festival/tickets/register.php" id="form" v-scope v-cloak>
     <div class="required" title="Champ obligatoire">
         <input type="text" class="required" name="name" placeholder="Prénom, nom" required minlength="2" autofocus>
     </div>
@@ -14,11 +14,15 @@
 
     <template v-if="hasSomeTicket()">
         <p>Repas</p>
+        <p class="disclaimer">🌿 Tous les repas sont en version végétarienne&nbsp;! 🌿</p>
 
         <div class="meals">
             <label class="field" v-for="(meal, index) in possibleMeals()">
                 <input type="checkbox" :name="`meal${index+1}`" v-model="meal.checked">
-                <span class="name">{{ meal.name }}</span>
+                <span class="name meal-info">
+                    <span>{{ meal.date }}</span>
+                    <span>{{ meal.name }}</span>
+                </span>
                 <span class="price">+ CHF {{ meal.price }}</span>
             </label>
         </div>
@@ -43,7 +47,7 @@
 
     <dialog v-if="showDialog" open>
         <video id="video" autoplay loop @click="video.play()">
-            <source src="/festival/conditions.mp4" type="video/mp4">
+            <source src="/festival/medias/conditions.mp4" type="video/mp4">
         </video>
     </dialog>
 </form>
@@ -57,16 +61,18 @@
 
     const ticketDiscount = <?= $festival["ticket_discount"] ?>
 
+    const mealNames = ["<?= $festival["meal1"] ?>", "<?= $festival["meal2"] ?>", "<?= $festival["meal3"] ?>", "<?= $festival["meal4"] ?>"]
+
     createApp({
         tickets: [
             { name: "Vendredi 19 juillet", price: ticketPrice, checked: false },
             { name: "Samedi 20 juillet", price: ticketPrice, checked: false },
         ],
         meals: [
-            { name: "19 juillet – soir", price: mealPrice, checked: false, tickets: [0] },
-            { name: "20 juillet – midi", price: mealPrice, checked: false, tickets: [0, 1] },
-            { name: "20 juillet – soir", price: mealPrice, checked: false, tickets: [1] },
-            { name: "21 juillet – midi", price: mealPrice, checked: false, tickets: [1] },
+            { name: mealNames[0], date: "Vendredi 19 – soir", price: mealPrice, checked: false, tickets: [0] },
+            { name: mealNames[1], date: "Samedi 20 – midi", price: mealPrice, checked: false, tickets: [0, 1] },
+            { name: mealNames[2], date: "Samedi 20 – soir", price: mealPrice, checked: false, tickets: [1] },
+            { name: mealNames[3], date: "Dimanche 21 – midi", price: mealPrice, checked: false, tickets: [1] },
         ],
         ticketDiscount,
         conditionsRead: false,

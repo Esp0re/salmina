@@ -91,6 +91,33 @@ main {
     padding: var(--small-gap)
 }
 
+.about > * {
+    transform: skew(-5deg);
+}
+
+.about strong {
+    font-weight: normal;
+    color: #e280b2;
+}
+
+.about > h2 {
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.about > p {
+    text-align: justify;
+}
+
+.about > .button {
+    margin: 1.5em auto;
+}
+
+.about img, .about video {
+    max-width: min(600px, 100%);
+    transform: skew(-3deg);
+}
+
 form {
     max-width: 500px;
     margin: 40px auto 0;
@@ -107,7 +134,14 @@ form {
 
 form p {
     margin-bottom: 0;
+    margin-bottom: 0;
     font-size: 1.2em;
+}
+
+.disclaimer {
+    font-size: 0.9em;
+    margin-top: 0;
+    color: #a0f5a0;
 }
 
 .required {
@@ -123,7 +157,7 @@ form p {
     color: #f38
 }
 
-input:not([type=checkbox]), button, #confirmation {
+input:not([type=checkbox]), button, a.button, #confirmation {
     width: 100%;
     height: 50px;
     margin: 0;
@@ -138,7 +172,7 @@ input[type=checkbox] {
     transform: scale(1.5);
 }
 
-input:not([type=checkbox]), button, textarea, .field {
+input:not([type=checkbox]), button, a.button, textarea, .field {
     padding: var(--small-gap);
     border: none;
     transform: skew(-5deg);
@@ -152,10 +186,16 @@ input, textarea, .field {
 
 .field {
     display: flex;
+    align-items: center;
 }
 
 .field .name {
     flex-grow: 1;
+}
+
+.field .price {
+    white-space: nowrap;
+    padding-left: 1em;
 }
 
 .field:hover {
@@ -166,6 +206,20 @@ input, textarea, .field {
 .field:has(input:checked) {
     cursor: pointer;
     background-color: rgba(139, 217, 128, 0.35)
+}
+
+.meal-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.meal-info span:first-child {
+    font-size: 0.9em;
+
+}
+
+.meal-info span:nth-child(2) {
+    color: #a0f5a0;
 }
 
 input:focus-visible, textarea:focus-visible {
@@ -201,29 +255,33 @@ label:has(input[type=checkbox]) {
     cursor: pointer;
 }
 
-button:focus-visible {
+a.button {
+    color: white;
+    text-decoration: none;
+}
+
+button:focus-visible, a.button:focus-visible {
     outline: 2px solid white
 }
 
-button {
+button, a.button {
     background-color: #1778b9;
-    font-weight: 700;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 2em 0;
+    margin: 2em auto;
 }
 
 button:not(:disabled) {
     cursor: pointer
 }
 
-button:hover:not(:disabled) {
+button:hover:not(:disabled), a.button:hover:not(:disabled) {
     background-color: #409ad6
 }
 
-button:disabled {
+button:disabled, a.button:disabled {
     background-color: #3b7ba2
 }
 
@@ -271,4 +329,9 @@ td:last-child {
 
 tr.total td, tr.total th {
     border-top: 1px solid #bdfa;
+}
+
+a.button {
+    max-width: 400px;
+    font-size: 1.4em;
 }

@@ -20,7 +20,12 @@ $hasPaid = $registration["has_paid"];
 $twintCode = "salmina" . explode("-", $festival["start_date"])[0] . " " . $registration["hash"]
 ?>
 
-<p>Tu es inscrit au festival!</p>
+<p>Tu es inscrit·e au festival&nbsp;! 🎉</p>
+
+<p>Afin de pouvoir se coordonner, nous te recommander de rejoindre notre groupe WhatsApp.</p>
+
+<a class="button" href="<?= $festival["chat_group"] ?>">groupe WhatsApp</a>
+
 <?php if (!$hasPaid): ?>
     <p>Pour confirmer ton inscription et réserver ta place, il ne te reste
         plus qu'à payer le montant ci-dessous à un organisateur.</p>

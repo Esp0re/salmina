@@ -28,15 +28,18 @@ $paidRegistrations = $statement->fetchAll();
 $statement = $db->query("select * from festival2024 where not has_paid order by registered_on desc");
 $unpaidRegistrations = $statement->fetchAll();
 
-$ticketPrice = 30;
-$ticketDiscount = 20;
-$mealPrice = 10;
+$statement = $db->query("select * from festivals order by id desc limit 1");
+$festival = $statement->fetch();
+
+$ticketPrice = $festival["ticket_price"];
+$ticketDiscount = $festival["ticket_discount"];
+$mealPrice = $festival["meal_price"];
 
 for ($i = 0; $i < count($unpaidRegistrations); ++$i)
     $unpaidRegistrations[$i]["price"] =
         ($unpaidRegistrations[$i]["ticket1"] ? $ticketPrice : 0) +
         ($unpaidRegistrations[$i]["ticket2"] ? $ticketPrice : 0) +
-        ($unpaidRegistrations[$i]["ticket1"] && $unpaidRegistrations[$i]["ticket2"] ? -$ticketDiscount : 0) +
+        ($unpaidRegistrations[$i]["ticket1"] && $unpaidRegistrations[$i]["ticket2"] ? $ticketDiscount : 0) +
         ($unpaidRegistrations[$i]["meal1"] ? $mealPrice : 0) +
         ($unpaidRegistrations[$i]["meal2"] ? $mealPrice : 0) +
         ($unpaidRegistrations[$i]["meal3"] ? $mealPrice : 0) +

@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit();
 }
 
-$db = require(__DIR__ . "/db.php");
+$db = require(__DIR__ . "/../db.php");
 
 $db->beginTransaction();
 $statement = $db->prepare(
@@ -38,5 +38,5 @@ $db->commit();
 session_start();
 $_SESSION["id"] = $id;
 
-header("Location: /festival");
+header("Location: /festival/tickets");
 exit();
