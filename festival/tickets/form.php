@@ -14,7 +14,7 @@
 
     <template v-if="hasSomeTicket()">
         <p>Repas</p>
-        <p class="disclaimer">🌿 Tous les repas sont en version végétarienne&nbsp;! 🌿</p>
+        <p class="disclaimer">🌿 Tous les repas sont végétariens&nbsp;! 🌿</p>
 
         <div class="meals">
             <label class="field" v-for="(meal, index) in possibleMeals()">
