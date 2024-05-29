@@ -97,7 +97,7 @@ main {
 
 .about strong {
     font-weight: normal;
-    color: #e280b2;
+    color: #ec7d9e;
 }
 
 .about > h2 {
@@ -334,4 +334,11 @@ tr.total td, tr.total th {
 a.button {
     max-width: 400px;
     font-size: 1.4em;
+}
+
+p.large {
+    margin-top: -1em;
+    margin-bottom: 2em;
+    font-size: 1.2em;
+    text-align: center;
 }

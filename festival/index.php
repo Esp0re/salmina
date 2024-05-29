@@ -25,6 +25,8 @@ $festival = $statement->fetch();
 
         <a class="button" href="/festival/tickets">Prendre des billets</a>
 
+        <p class="large"><strong>Les places sont limitées&nbsp;!</strong></p>
+
         <h2>Quand</h2>
         <p>Du <strong>vendredi 19 au samedi 20 juillet 2024</strong>, ainsi que le dimanche 21 durant la journée pour
             les motivés.</p>
