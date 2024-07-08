@@ -31,7 +31,7 @@ if (isset($_POST["pass"])) {
 <body>
 <form method="post">
     <?php if (isset($error)): ?><p><?= $error ?></p><?php endif ?>
-    <input type="password" name="pass" required minlength="1">
+    <input type="password" name="pass" placeholder="Password" required minlength="1" autofocus>
     <button type="submit">Login</button>
 </form>
 </body>

@@ -35,15 +35,34 @@ $ticketPrice = $festival["ticket_price"];
 $ticketDiscount = $festival["ticket_discount"];
 $mealPrice = $festival["meal_price"];
 
+function computePrice($registration, $festival): array
+{
+    $ticketPrice = $festival["ticket_price"];
+    $ticketDiscount = $festival["ticket_discount"];
+    $mealPrice = $festival["meal_price"];
+
+    $totalTicketPrice =
+        ($registration["ticket1"] ? $ticketPrice : 0) +
+        ($registration["ticket2"] ? $ticketPrice : 0) +
+        ($registration["ticket1"] && $registration["ticket2"] ? $ticketDiscount : 0);
+    $totalMealPrice =
+        ($registration["meal1"] ? $mealPrice : 0) +
+        ($registration["meal2"] ? $mealPrice : 0) +
+        ($registration["meal3"] ? $mealPrice : 0) +
+        ($registration["meal4"] ? $mealPrice : 0);
+
+    return [
+        "tickets" => $totalTicketPrice,
+        "meals" => $totalMealPrice,
+        "total" => $totalTicketPrice + $totalMealPrice,
+    ];
+}
+
+for ($i = 0; $i < count($paidRegistrations); ++$i)
+    $paidRegistrations[$i]["price"] = computePrice($paidRegistrations[$i], $festival);
+
 for ($i = 0; $i < count($unpaidRegistrations); ++$i)
-    $unpaidRegistrations[$i]["price"] =
-        ($unpaidRegistrations[$i]["ticket1"] ? $ticketPrice : 0) +
-        ($unpaidRegistrations[$i]["ticket2"] ? $ticketPrice : 0) +
-        ($unpaidRegistrations[$i]["ticket1"] && $unpaidRegistrations[$i]["ticket2"] ? $ticketDiscount : 0) +
-        ($unpaidRegistrations[$i]["meal1"] ? $mealPrice : 0) +
-        ($unpaidRegistrations[$i]["meal2"] ? $mealPrice : 0) +
-        ($unpaidRegistrations[$i]["meal3"] ? $mealPrice : 0) +
-        ($unpaidRegistrations[$i]["meal4"] ? $mealPrice : 0);
+    $unpaidRegistrations[$i]["price"] = computePrice($unpaidRegistrations[$i], $festival);
 
 $ticket1sum = array_sum(array_map(fn($r) => $r["ticket1"], $paidRegistrations));
 $ticket2sum = array_sum(array_map(fn($r) => $r["ticket2"], $paidRegistrations));
@@ -61,6 +80,13 @@ $unpaidMeal2sum = array_sum(array_map(fn($r) => $r["meal2"], $unpaidRegistration
 $unpaidMeal3sum = array_sum(array_map(fn($r) => $r["meal3"], $unpaidRegistrations));
 $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistrations));
 
+$totalIncome = array_sum(array_map(fn($r) => $r["price"]["total"], $paidRegistrations));
+$unpaidTotalIncome = array_sum(array_map(fn($r) => $r["price"]["total"], $unpaidRegistrations));
+$ticketsIncome = array_sum(array_map(fn($r) => $r["price"]["tickets"], $paidRegistrations));
+$unpaidTicketsIncome = array_sum(array_map(fn($r) => $r["price"]["tickets"], $unpaidRegistrations));
+$mealsIncome = array_sum(array_map(fn($r) => $r["price"]["meals"], $paidRegistrations));
+$unpaidMealsIncome = array_sum(array_map(fn($r) => $r["price"]["meals"], $unpaidRegistrations));
+
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +100,7 @@ $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistration
     <style>
         body {
             font-family: system-ui, sans-serif;
+            min-width: 1000px;
         }
 
         table {
@@ -84,6 +111,15 @@ $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistration
             border: 1px solid black;
             min-width: 1em;
             padding: 0.4em;
+        }
+
+        td:not(.message) {
+            white-space: nowrap;
+        }
+
+        .message > div {
+            max-height: 4lh;
+            overflow-y: scroll;
         }
     </style>
 </head>
@@ -136,6 +172,36 @@ $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistration
         <td><?= $meal4sum + $unpaidMeal4sum ?></td>
     </tr>
 </table>
+
+<h2>Recette</h2>
+<table>
+    <tr>
+        <td></td>
+        <th>Actuelle</th>
+        <th>Potentielle</th>
+    </tr>
+    <tr>
+        <th>Billets</th>
+        <td>CHF <?= $ticketsIncome ?></td>
+        <td>CHF <?= $ticketsIncome + $unpaidTicketsIncome ?></td>
+    </tr>
+    <tr>
+        <th>Repas</th>
+        <td>CHF <?= $mealsIncome ?></td>
+        <td>CHF <?= $mealsIncome + $unpaidMealsIncome ?></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>Total</th>
+        <td>CHF <?= $totalIncome ?></td>
+        <td>CHF <?= $totalIncome + $unpaidTotalIncome ?></td>
+    </tr>
+</table>
+
 <h2>Inscriptions payées (<?= count($paidRegistrations) ?>)&nbsp;:</h2>
 <form method="post" style="margin-bottom: 1.5em">
     <input type="text" name="hash" placeholder="Code d'inscription">
@@ -146,10 +212,10 @@ $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistration
         <th>Nom</th>
         <th>Billets</th>
         <th>Repas</th>
-        <th>Conditions acceptées</th>
-        <th>Conditions lues</th>
+        <th colspan="2">Conditions acceptées / lues</th>
         <th>Message</th>
         <th>Payé le</th>
+        <th>Prix</th>
         <th>Paiement</th>
     </tr>
     <?php foreach ($paidRegistrations as $registration): ?>
@@ -159,8 +225,11 @@ $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistration
             <td><?php for ($i = 1; $i <= 4; $i++) if ($registration["meal" . $i]) echo $i . "&nbsp;"; ?></td>
             <td><?= $registration["conditions_accepted"] ? "oui" : "" ?></td>
             <td><?= $registration["conditions_read"] ? "oui" : "" ?></td>
-            <td><?= $registration["message"] ?></td>
-            <td><?= explode(".", $registration["paid_on"])[0] ?></td>
+            <td class="message">
+                <div><?= $registration["message"] ?></div>
+            </td>
+            <td><?= substr(explode(".", $registration["paid_on"])[0], 0, 16) ?></td>
+            <td>CHF <?= $registration["price"]["total"] ?></td>
             <td>
                 <form method="post">
                     <input type="hidden" name="has_paid" value="0">
@@ -178,8 +247,7 @@ $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistration
         <th>Nom</th>
         <th>Billets</th>
         <th>Repas</th>
-        <th>Conditions acceptées</th>
-        <th>Conditions lues</th>
+        <th colspan="2">Conditions acceptées / lues</th>
         <th>Message</th>
         <th>Inscrit le</th>
         <th>Prix</th>
@@ -192,9 +260,11 @@ $unpaidMeal4sum = array_sum(array_map(fn($r) => $r["meal4"], $unpaidRegistration
             <td><?php for ($i = 1; $i <= 4; $i++) if ($registration["meal" . $i]) echo $i . "&nbsp;"; ?></td>
             <td><?= $registration["conditions_accepted"] ? "oui" : "" ?></td>
             <td><?= $registration["conditions_read"] ? "oui" : "" ?></td>
-            <td><?= $registration["message"] ?></td>
-            <td><?= explode(".", $registration["registered_on"])[0] ?></td>
-            <td>CHF <?= $registration["price"] ?></td>
+            <td class="message">
+                <div><?= $registration["message"] ?></div>
+            </td>
+            <td><?= substr(explode(".", $registration["registered_on"])[0], 0, 16) ?></td>
+            <td>CHF <?= $registration["price"]["total"] ?></td>
             <td>
                 <form method="post">
                     <input type="hidden" name="has_paid" value="1">
