@@ -50,10 +50,15 @@ function computePrice($registration, $festival): array
         ($registration["meal2"] ? $mealPrice : 0) +
         ($registration["meal3"] ? $mealPrice : 0) +
         ($registration["meal4"] ? $mealPrice : 0);
+    $discount = $registration["discount"];
+
+    $totalMealPrice += min($totalTicketPrice + $discount, 0);
+    $totalTicketPrice = max($totalTicketPrice + $discount, 0);
 
     return [
         "tickets" => $totalTicketPrice,
         "meals" => $totalMealPrice,
+        "discount" => $discount,
         "total" => $totalTicketPrice + $totalMealPrice,
     ];
 }
@@ -117,9 +122,14 @@ $unpaidMealsIncome = array_sum(array_map(fn($r) => $r["price"]["meals"], $unpaid
             white-space: nowrap;
         }
 
+        td.discount {
+            color: mediumseagreen;
+            font-style: italic;
+        }
+
         .message > div {
             max-height: 4lh;
-            overflow-y: scroll;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -229,7 +239,9 @@ $unpaidMealsIncome = array_sum(array_map(fn($r) => $r["price"]["meals"], $unpaid
                 <div><?= $registration["message"] ?></div>
             </td>
             <td><?= substr(explode(".", $registration["paid_on"])[0], 0, 16) ?></td>
-            <td>CHF <?= $registration["price"]["total"] ?></td>
+            <td <?= $registration["discount"] != 0 ? 'class="discount"' : "" ?>>
+                CHF <?= $registration["price"]["total"] ?>
+            </td>
             <td>
                 <form method="post">
                     <input type="hidden" name="has_paid" value="0">
@@ -264,7 +276,9 @@ $unpaidMealsIncome = array_sum(array_map(fn($r) => $r["price"]["meals"], $unpaid
                 <div><?= $registration["message"] ?></div>
             </td>
             <td><?= substr(explode(".", $registration["registered_on"])[0], 0, 16) ?></td>
-            <td>CHF <?= $registration["price"]["total"] ?></td>
+            <td <?= $registration["discount"] != 0 ? 'class="discount"' : "" ?>>
+                CHF <?= $registration["price"]["total"] ?>
+            </td>
             <td>
                 <form method="post">
                     <input type="hidden" name="has_paid" value="1">
