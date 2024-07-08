@@ -172,12 +172,12 @@ $unpaidMealsIncome = array_sum(array_map(fn($r) => $r["price"]["meals"], $unpaid
         <td><?= $meal2sum + $unpaidMeal2sum ?></td>
     </tr>
     <tr>
-        <th>Vendredi soir</th>
+        <th>Samedi soir</th>
         <td><?= $meal3sum ?></td>
         <td><?= $meal3sum + $unpaidMeal3sum ?></td>
     </tr>
     <tr>
-        <th>Vendredi soir</th>
+        <th>Dimanche midi</th>
         <td><?= $meal4sum ?></td>
         <td><?= $meal4sum + $unpaidMeal4sum ?></td>
     </tr>
