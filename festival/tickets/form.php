@@ -1,4 +1,4 @@
-<form method="post" action="/festival/tickets/register.php" id="form" v-scope v-cloak>
+<form method="post" action="/festival/tickets/register.php" id="form" accept-charset="UTF-8" v-scope v-cloak>
     <div class="required" title="Champ obligatoire">
         <input type="text" class="required" name="name" placeholder="Prénom, nom" required minlength="2" autofocus>
     </div>
