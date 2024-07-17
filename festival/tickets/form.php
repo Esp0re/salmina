@@ -17,8 +17,8 @@
         <p class="disclaimer">🌿 Tous les repas sont végétariens&nbsp;! 🌿</p>
 
         <div class="meals">
-            <label class="field" v-for="(meal, index) in possibleMeals()">
-                <input type="checkbox" :name="`meal${index+1}`" v-model="meal.checked">
+            <label class="field" v-for="meal in possibleMeals()">
+                <input type="checkbox" :name="meal.id" v-model="meal.checked">
                 <span class="name meal-info">
                     <span>{{ meal.date }}</span>
                     <span>{{ meal.name }}</span>
@@ -69,10 +69,10 @@
             { name: "Samedi 20 juillet", price: ticketPrice, checked: false },
         ],
         meals: [
-            { name: mealNames[0], date: "Vendredi 19 – soir", price: mealPrice, checked: false, tickets: [0] },
-            { name: mealNames[1], date: "Samedi 20 – midi", price: mealPrice, checked: false, tickets: [0, 1] },
-            { name: mealNames[2], date: "Samedi 20 – soir", price: mealPrice, checked: false, tickets: [1] },
-            { name: mealNames[3], date: "Dimanche 21 – midi", price: mealPrice, checked: false, tickets: [1] },
+            { id: "meal1", name: mealNames[0], date: "Vendredi 19 – soir", price: mealPrice, checked: false, tickets: [0] },
+            { id: "meal2", name: mealNames[1], date: "Samedi 20 – midi", price: mealPrice, checked: false, tickets: [0, 1] },
+            { id: "meal3", name: mealNames[2], date: "Samedi 20 – soir", price: mealPrice, checked: false, tickets: [1] },
+            { id: "meal4", name: mealNames[3], date: "Dimanche 21 – midi", price: mealPrice, checked: false, tickets: [1] },
         ],
         ticketDiscount,
         conditionsRead: false,
